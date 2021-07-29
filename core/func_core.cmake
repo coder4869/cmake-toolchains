@@ -1,0 +1,9 @@
+function(PROJECT_FIX_VERSION)
+    if (NOT PROJECT_VERSION_PATCH)
+        SET(PROJECT_VERSION_PATCH 0)
+    endif()
+
+    if (NOT PROJECT_VERSION_TWEAK)
+        SET(PROJECT_VERSION_TWEAK 0)
+    endif()
+endfunction(PROJECT_FIX_VERSION)
