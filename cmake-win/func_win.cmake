@@ -1,8 +1,8 @@
 function(WIN_ADD_META RES_FILES)
     if (WIN32)
-        set(ICON_FILE ${CMAKE_CURRENT_LIST_DIR}/res/AppIcon.ico)
+        set(ICON_FILE ${CMAKE_TOOLCHAIN_ROOT}/cmake-win/res/AppIcon.ico)
 
-        configure_file("${CMAKE_CURRENT_LIST_DIR}/res/windows_metafile.rc.in" "windows_metafile.rc")
+        configure_file("${CMAKE_TOOLCHAIN_ROOT}/cmake-win/res/windows_metafile.rc.in" "windows_metafile.rc")
         set(RES_FILES "windows_metafile.rc")
         set(CMAKE_RC_COMPILER_INIT windres)
         ENABLE_LANGUAGE(RC)

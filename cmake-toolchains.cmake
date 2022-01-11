@@ -8,10 +8,11 @@ elseif(IOS)
     set(PLATFORM_DIR ${PROJECT_DIR}/platforms/iOS)
 elseif(OSX)
     set(PLATFORM_DIR ${PROJECT_DIR}/platforms/OSX)
-elseif(WIN32)
+elseif(WIN)
     set(PLATFORM_DIR ${PROJECT_DIR}/platforms/Windows)
 endif()
 
+set(CMAKE_TOOLCHAIN_ROOT ${CMAKE_CURRENT_LIST_DIR})
 include(${CMAKE_CURRENT_LIST_DIR}/cmake-android/func_android.cmake)     # Android
 include(${CMAKE_CURRENT_LIST_DIR}/cmake-apple/func_apple.cmake)         # apple
 include(${CMAKE_CURRENT_LIST_DIR}/cmake-emcc/emscripten-options.cmake)  # emcc

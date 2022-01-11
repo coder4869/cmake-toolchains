@@ -1,4 +1,4 @@
-include(${CMAKE_CURRENT_LIST_DIR}/LinkOptions.cmake)
+include(${CMAKE_TOOLCHAIN_ROOT}/link-options/LinkOptions.cmake)
 
 # clang LTO is broken with __thread variables #498 
 # https://github.com/android-ndk/ndk/issues/498

@@ -33,7 +33,7 @@ function(XCODE_SETTING target_name min_version)
         add_definitions(-D __IOS__=1)
         # target_compile_definitions(${target_name} PRIVATE __IOS__ )
 
-        configure_file(${CMAKE_CURRENT_LIST_DIR}/res/IOSBundleInfo.plist.in ${CMAKE_BINARY_DIR}/Info.plist)
+        configure_file(${CMAKE_TOOLCHAIN_ROOT}/cmake-apple/res/IOSBundleInfo.plist.in ${CMAKE_BINARY_DIR}/Info.plist)
         set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_BINARY_DIR}/Info.plist)
     elseif(OSX)
         set_target_properties( ${target_name} PROPERTIES
@@ -46,7 +46,7 @@ function(XCODE_SETTING target_name min_version)
         add_definitions(-D __OSX__=1)
         # target_compile_definitions(${target_name} PRIVATE __OSX__ )
 
-        configure_file(${CMAKE_CURRENT_LIST_DIR}/res/MacOSXBundleInfo.plist.in ${CMAKE_BINARY_DIR}/Info.plist)
+        configure_file(${CMAKE_TOOLCHAIN_ROOT}/cmake-apple/res/MacOSXBundleInfo.plist.in ${CMAKE_BINARY_DIR}/Info.plist)
         set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_BINARY_DIR}/Info.plist)
     endif()
 
@@ -123,7 +123,7 @@ endfunction(XCODE_STRIP_INSTALLED_PRODUCT)
 function(XCODE_ADD_META RES_FILES)
     if (APPLE)
         set(ICON_NAME AppIcon)
-        set(ICON_FILE ${CMAKE_CURRENT_LIST_DIR}/res/${ICON_NAME}.icns)
+        set(ICON_FILE ${CMAKE_TOOLCHAIN_ROOT}/cmake-apple/res/${ICON_NAME}.icns)
         set_source_files_properties(${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
         # Identify MacOS bundle
