@@ -1,5 +1,6 @@
-# eg. XCODE_SETTING(<SDK> 9.0/10.13)
+set(CURRENT_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR})
 
+# eg. XCODE_SETTING(<SDK> 9.0/10.13)
 function(XCODE_SETTING target_name min_version)
     if(IOS OR OSX)
         # Deployment Postprocess
@@ -13,7 +14,7 @@ function(XCODE_SETTING target_name min_version)
     
         set_target_properties( ${target_name} PROPERTIES
             XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC YES
-            XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++14"
+            XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++17"
             XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Release] s
             XCODE_ATTRIBUTE_LLVM_LTO[variant=Release] YES                   
             XCODE_ATTRIBUTE_GCC_INPUT_FILETYPE sourcecode.cpp.objcpp    # objc++
@@ -22,7 +23,6 @@ function(XCODE_SETTING target_name min_version)
             )  
     endif()
     
-    # For IOS
     if(IOS)
         set_target_properties( ${target_name} PROPERTIES
             XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET ${min_version}
@@ -32,9 +32,6 @@ function(XCODE_SETTING target_name min_version)
         # append flags for XCODE_ATTRIBUTE_GCC_PREPROCESSOR_DEFINITIONS
         add_definitions(-D __IOS__=1)
         # target_compile_definitions(${target_name} PRIVATE __IOS__ )
-
-        configure_file(${CMAKE_TOOLCHAIN_ROOT}/cmake-apple/res/IOSBundleInfo.plist.in ${CMAKE_BINARY_DIR}/Info.plist)
-        set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_BINARY_DIR}/Info.plist)
     elseif(OSX)
         set_target_properties( ${target_name} PROPERTIES
             XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET ${min_version}
@@ -45,9 +42,6 @@ function(XCODE_SETTING target_name min_version)
         # append flags for XCODE_ATTRIBUTE_GCC_PREPROCESSOR_DEFINITIONS
         add_definitions(-D __OSX__=1)
         # target_compile_definitions(${target_name} PRIVATE __OSX__ )
-
-        configure_file(${CMAKE_TOOLCHAIN_ROOT}/cmake-apple/res/MacOSXBundleInfo.plist.in ${CMAKE_BINARY_DIR}/Info.plist)
-        set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_BINARY_DIR}/Info.plist)
     endif()
 
 endfunction(XCODE_SETTING)
@@ -120,10 +114,13 @@ endfunction(XCODE_STRIP_INSTALLED_PRODUCT)
 
 ######################################## XCode Add Files ########################################
 
-function(XCODE_ADD_META RES_FILES)
+# [CMake中的function和macro](https://blog.csdn.net/fb_941219/article/details/89358576)
+# [CMake(Normal Variable And Function)](https://www.cnblogs.com/Braveliu/p/15600782.html)
+# var META_FILES required
+function(XCODE_ADD_META)
     if (APPLE)
         set(ICON_NAME AppIcon)
-        set(ICON_FILE ${CMAKE_TOOLCHAIN_ROOT}/cmake-apple/res/${ICON_NAME}.icns)
+        set(ICON_FILE ${CURRENT_CMAKE_DIR}/res/${ICON_NAME}.icns)
         set_source_files_properties(${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
         # Identify MacOS bundle
@@ -135,6 +132,17 @@ function(XCODE_ADD_META RES_FILES)
         set(MACOSX_BUNDLE_GUI_IDENTIFIER ${IDENTIFIER})
         set(MACOSX_BUNDLE_ICON_FILE ${ICON_NAME})
         
-        set(${RES_FILES} ${ICON_FILE})
+        set(META_FILES ${ICON_FILE} PARENT_SCOPE) # PARENT_SCOPE make change avaliable outside fucntion
     endif()
 endfunction(XCODE_ADD_META)
+
+
+function(XCODE_ADD_INFO_PLIST)
+    if (IOS)
+        configure_file(${CURRENT_CMAKE_DIR}/res/IOSBundleInfo.plist.in ${PROJECT_BINARY_DIR}/Info.plist)
+        set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_BINARY_DIR}/Info.plist)
+    elseif(OSX)
+        configure_file(${CURRENT_CMAKE_DIR}/res/MacOSXBundleInfo.plist.in ${PROJECT_BINARY_DIR}/Info.plist)
+        set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_BINARY_DIR}/Info.plist)
+    endif()
+endfunction(XCODE_ADD_INFO_PLIST)

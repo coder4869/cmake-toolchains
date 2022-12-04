@@ -13,12 +13,12 @@ elseif(WIN)
 endif()
 
 set(CMAKE_TOOLCHAIN_ROOT ${CMAKE_CURRENT_LIST_DIR})
-include(${CMAKE_CURRENT_LIST_DIR}/cmake-android/func_android.cmake)     # Android
-include(${CMAKE_CURRENT_LIST_DIR}/cmake-apple/func_apple.cmake)         # apple
+include(${CMAKE_CURRENT_LIST_DIR}/cmake-android/android_func.cmake)     # Android
+include(${CMAKE_CURRENT_LIST_DIR}/cmake-apple/apple_func.cmake)         # apple
 include(${CMAKE_CURRENT_LIST_DIR}/cmake-emcc/emscripten-options.cmake)  # emcc
-include(${CMAKE_CURRENT_LIST_DIR}/cmake-go/func_go.cmake)               # go
-include(${CMAKE_CURRENT_LIST_DIR}/cmake-qt/func_qt.cmake)               # Qt
-include(${CMAKE_CURRENT_LIST_DIR}/cmake-win/func_win.cmake)             # windows
-include(${CMAKE_CURRENT_LIST_DIR}/cmake-core/func_core.cmake)           # Core
+include(${CMAKE_CURRENT_LIST_DIR}/cmake-go/go_func.cmake)               # go
+include(${CMAKE_CURRENT_LIST_DIR}/cmake-qt/qt_func.cmake)               # Qt
+include(${CMAKE_CURRENT_LIST_DIR}/cmake-win/win_func.cmake)             # Windows
+include(${CMAKE_CURRENT_LIST_DIR}/cmake-core/global.cmake)              # Core
 ## find-deps
 ## link-options

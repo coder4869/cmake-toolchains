@@ -1,14 +1,17 @@
-function(WIN_ADD_META RES_FILES)
-    if (WIN32)
-        set(ICON_FILE ${CMAKE_TOOLCHAIN_ROOT}/cmake-win/res/AppIcon.ico)
+set(CURRENT_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR})
 
-        configure_file("${CMAKE_TOOLCHAIN_ROOT}/cmake-win/res/windows_metafile.rc.in" "windows_metafile.rc")
+# var META_FILES required
+function(WIN_ADD_META)
+    if (WIN32)
+        set(ICON_FILE ${CURRENT_CMAKE_DIR}/res/AppIcon.ico)
+
+        configure_file("${CURRENT_CMAKE_DIR}/res/windows_metafile.rc.in" "windows_metafile.rc")
         set(RES_FILES "windows_metafile.rc")
         set(CMAKE_RC_COMPILER_INIT windres)
         ENABLE_LANGUAGE(RC)
         SET(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
 
-        set(${RES_FILES} ${RES_FILES})
+        set(META_FILES ${RES_FILES} ${ICON_FILE} PARENT_SCOPE) # PARENT_SCOPE make change avaliable outside fucntion
     endif()
 endfunction(WIN_ADD_META)
 

@@ -2,12 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon.icns</string>
 	<key>BuildMachineOSBuild</key>
 	<string>20D91</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>DumixStudio</string>
+	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
@@ -52,6 +54,8 @@
 	<string>添加图片/视频到相册</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>使用相册</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2021年 coder4869. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>
