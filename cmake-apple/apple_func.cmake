@@ -1,3 +1,25 @@
+# MIT License
+
+# Copyright (c) 2021~2022 [coder4869](https://github.com/coder4869)
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 set(CURRENT_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 # eg. XCODE_SETTING(<SDK> 9.0/10.13)
@@ -30,8 +52,10 @@ function(XCODE_SETTING target_name min_version)
             XCODE_ATTRIBUTE_SDKROOT iphoneos
             )
         # append flags for XCODE_ATTRIBUTE_GCC_PREPROCESSOR_DEFINITIONS
-        add_definitions(-D __IOS__=1)
-        # target_compile_definitions(${target_name} PRIVATE __IOS__ )
+        # https://blog.csdn.net/whatday/article/details/104376582/
+        # https://www.cnblogs.com/Need4Speak/p/5397949.html
+        # add_definitions(-D __IOS__=1)
+        target_compile_definitions(${target_name} PUBLIC __IOS__ )
     elseif(OSX)
         set_target_properties( ${target_name} PROPERTIES
             XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET ${min_version}
@@ -40,8 +64,8 @@ function(XCODE_SETTING target_name min_version)
             XCODE_ATTRIBUTE_SDKROOT macosx
             )
         # append flags for XCODE_ATTRIBUTE_GCC_PREPROCESSOR_DEFINITIONS
-        add_definitions(-D __OSX__=1)
-        # target_compile_definitions(${target_name} PRIVATE __OSX__ )
+        # add_definitions(-D __OSX__=1)
+        target_compile_definitions(${target_name} PUBLIC __OSX__ )
     endif()
 
 endfunction(XCODE_SETTING)
