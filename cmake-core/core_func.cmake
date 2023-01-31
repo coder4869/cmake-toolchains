@@ -43,15 +43,64 @@ function(SET_CXX_VERSION version)
 endfunction(SET_CXX_VERSION)
 
 
-# e.g. APP_ADD_RES("${CMAKE_TOOLCHAIN_ROOT}/cmake-apple/res/*.*"  "Resources/")
+# e.g. 
+# set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+# set(CONF_FILES ${PROJ_ROOT}/conf/project.json)
+# add_executable(${PROJECT_NAME} ${OS_BUNDLE} ${SRC_FILES} ${CONF_FILES})
+# APP_ADD_RES("${PROJ_ROOT}/conf/project.json" "Resources/")
 function(APP_ADD_RES src_files dst_dir)
     File(GLOB TARGET_FILEs ${src_files})
+    # message("APP_ADD_RES() TARGET_FILEs = ${TARGET_FILEs} ; src_files = ${src_files} ; dst_dir = ${dst_dir} ")
     if(APPLE)
         set_source_files_properties(${TARGET_FILEs} PROPERTIES MACOSX_PACKAGE_LOCATION ${dst_dir})
     elseif(WIN32)
         file(COPY ${TARGET_FILEs} DESTINATION ${EXECUTABLE_OUTPUT_PATH}/${dst_dir})
-    endif(OSX)    
+    endif(WIN32)
 endfunction(APP_ADD_RES)
+
+# e.g. 
+# set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+# set(PLUGIN_DIR ${PROJ_ROOT}/../plugins)
+# File(GLOB_RECURSE PLUGIN_FILEs ${PLUGIN_DIR}/*.*)
+# if(NOT ANDROID)
+#     source_group(
+#         TREE ${PLUGIN_DIR}
+#         PREFIX "plugins"
+#         FILES ${PLUGIN_FILEs}
+#         )
+# endif(NOT ANDROID)
+# add_executable(${PROJECT_NAME} ${OS_BUNDLE} ${SRC_FILES} ${PLUGIN_FILEs})
+# APP_ADD_RES_RECURSE("${PLUGIN_DIR}/" "Resources/plugins/" "${PLUGIN_DIR}/*.*")
+function(APP_ADD_RES_RECURSE src_dir dst_dir src_files)
+    get_filename_component(src_dir ${src_dir} ABSOLUTE)
+    message("APP_ADD_RES_RECURSE() src_dir = ${src_dir} ; dst_dir = ${dst_dir} ; src_files = ${src_files} ")
+    File(GLOB_RECURSE TARGET_FILEs ${src_files})
+    if(APPLE)
+        foreach(file_path ${TARGET_FILEs})
+            get_filename_component(file_abs_path ${file_path} ABSOLUTE)
+            # get_filename_component(file_abs_path ${file_path} REALPATH)
+            get_filename_component(file_dir_path ${file_abs_path} PATH)
+            set(dst_path)
+            # string(REPLACE <match-string> <replace-string> <out-var> <input>...)
+            string(REPLACE ${src_dir} "${dst_dir}/" dst_path ${file_dir_path})
+            message("APP_ADD_RES_RECURSE() file_path=${file_path} ; dst_path=${dst_path}")
+            set_source_files_properties(${file_path} PROPERTIES MACOSX_PACKAGE_LOCATION ${dst_path})
+        endforeach(file_path)
+        
+    elseif(WIN32)
+        foreach(file_path ${TARGET_FILEs})
+            get_filename_component(file_abs_path ${file_path} ABSOLUTE)
+            # get_filename_component(file_abs_path ${file_path} REALPATH)
+            get_filename_component(file_dir_path ${file_abs_path} PATH)
+            set(dst_path)
+            # string(REPLACE <match-string> <replace-string> <out-var> <input>...)
+            string(REPLACE ${src_dir} "${dst_dir}/" dst_path ${file_dir_path})
+            message("APP_ADD_RES_RECURSE() file_path=${file_path}; dst_path=${dst_path}")
+            file(COPY ${file_path} DESTINATION ${EXECUTABLE_OUTPUT_PATH}/${dst_path})
+        endforeach(file_path)
+    endif(WIN32)
+
+endfunction(APP_ADD_RES_RECURSE)
 
 
 # e.g. cmake .. -DCMAKE_INSTALL_PREFIX=$BUILD_DIR
